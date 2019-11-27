@@ -1,4 +1,4 @@
-<p align="center"><img src="https://resources.chenjianhui.site/logo.png"/></p>
+<p align="center"><img src="https://resources.chenjianhui.site/x-expression.png"/></p>
 <p align="center"><strong>基于Java的简单脚本解析库</strong></p>
 
 ## 简介
