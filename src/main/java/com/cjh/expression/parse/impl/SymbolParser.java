@@ -20,10 +20,7 @@ public class SymbolParser implements Parser<Queue<String>> {
     public Queue<String> parse(String script) {
         // 去头尾空格
         script = script.trim();
-        // 去头尾括号
-        if (script.startsWith("(") && script.endsWith(")")) {
-            script = script.substring(1, script.length() - 1);
-        }
+        script = this.preProcessScript(script);
         Stack<String> symbolStack = new Stack<>();
         Queue<String> result = new LinkedList<>();
         List<char[]> symbols = RegisterSymbol.symbolChars();
@@ -140,6 +137,53 @@ public class SymbolParser implements Parser<Queue<String>> {
             result.add(symbolStack.pop());
         }
         return result;
+    }
+
+    /**
+     * 预处理脚本
+     *
+     * @param script 脚本信息
+     * @description 处理示例
+     * a + b * c => a + b * c
+     * (a + b) => a + b
+     * (a + b * (c + d)) => a + b * (c + d)
+     * (a + b) * (c + d) => (a + b) * (c + d)
+     * @return 去除两边匹配的括号
+     */
+    private String preProcessScript(String script) {
+        if (script.startsWith("(") && script.endsWith(")")) {
+            char[] chars = script.toCharArray();
+            Stack<Character> stack = new Stack<>();
+            char c;
+            int endMatch = 0;
+            int i = 0;
+            boolean doubleQuotesEnd = true;
+            boolean singleQuotesEnd = true;
+            while (i < chars.length) {
+                c = chars[i];
+                if (c == '\"') {
+                    doubleQuotesEnd = !doubleQuotesEnd;
+                } else if (c == '\'') {
+                    singleQuotesEnd = !singleQuotesEnd;
+                }
+                if (doubleQuotesEnd && singleQuotesEnd) {
+                    if (c == '(') {
+                        stack.push(c);
+                    } else if (c == ')') {
+                        stack.pop();
+                        if (stack.isEmpty()) {
+                            endMatch = i;
+                            break;
+                        }
+                    }
+                }
+                i++;
+            }
+            if (endMatch == chars.length - 1) {
+                return script.substring(1, script.length() - 1);
+            }
+        }
+        return script;
     }
 
     private boolean isSameStart(char[] symbolChar, String str) {

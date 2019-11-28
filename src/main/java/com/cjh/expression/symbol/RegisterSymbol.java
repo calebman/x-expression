@@ -26,6 +26,7 @@ public enum RegisterSymbol {
     GT(new char[]{'>'}, 6, GTSymbolExpression.class),
     AND(new char[]{'&', '&'}, 4, AndSymbolExpression.class),
     OR(new char[]{'|', '|'}, 4, OrSymbolExpression.class),
+    EQ(new char[]{'=', '='}, 4, EQSymbolExpression.class),
     ASSI(new char[]{'='}, 0, AssiSymbolExpression.class);
 
     /**

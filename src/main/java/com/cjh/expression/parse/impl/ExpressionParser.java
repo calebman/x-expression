@@ -48,7 +48,7 @@ public class ExpressionParser implements Parser<ExpressionChain> {
                 expressions.add(parseExpression(line));
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new ParseException(line, "Unknow exception");
+                throw new ParseException(line, e.getMessage());
             }
         }
         return new ExpressionChain(expressions);

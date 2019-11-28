@@ -13,6 +13,7 @@ public class TestMain {
 
     public static void main(String[] args) {
         String script = "c = a + b * c - 2 ^ a + b / 2;return(c);";
+        script = "print('result = ' , ('aa)(a((((((((' + ((a/b >= 0.1 && a/b < 0.3) || (c/b >=0.3 && c/b < 0.5))));";
         // 获得解析器
         Parser<ExpressionChain> parser = new ExpressionParser();
         // 构建上下文
