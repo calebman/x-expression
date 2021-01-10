@@ -17,35 +17,35 @@ public class SingleScriptParser implements Parser<List<String>> {
     @Override
     public List<String> parse(String script) {
         List<String> result = new LinkedList<>();
-        Stack<String> semicolonStack = new Stack<>();
         StringBuilder sb = new StringBuilder();
-        for (String s : script.split("")) {
-            switch (s) {
-                case "\"":
-                    if (!semicolonStack.isEmpty() && semicolonStack.peek().equals("\"")) {
-                        semicolonStack.pop();
-                    } else {
-                        semicolonStack.push("\"");
-                    }
+        boolean doubleQuotesEnd = true;
+        boolean singleQuotesEnd = true;
+        for (char c : script.toCharArray()) {
+            switch (c) {
+                case '"':
+                    doubleQuotesEnd = !doubleQuotesEnd;
                     break;
-                case "'":
-                    if (!semicolonStack.isEmpty() && semicolonStack.peek().equals("'")) {
-                        semicolonStack.pop();
-                    } else {
-                        semicolonStack.push("'");
-                    }
+                case '\'':
+                    singleQuotesEnd = !singleQuotesEnd;
                     break;
-                case "\n":
-                case ";":
-                    if (semicolonStack.isEmpty()) {
-                        result.add(sb.toString());
+                case '\n':
+                case ';':
+                    if (doubleQuotesEnd && singleQuotesEnd) {
+                        String line = sb.toString().trim();
+                        if (!line.isEmpty()) {
+                            result.add(sb.toString());
+                        }
                         sb = new StringBuilder();
                         continue;
                     }
                     break;
 
             }
-            sb.append(s);
+            sb.append(c);
+        }
+        String line = sb.toString().trim();
+        if (!line.isEmpty()) {
+            result.add(sb.toString());
         }
         return result;
     }
